@@ -114,7 +114,6 @@ uint16_t read_mem(uint16_t idx)
   return ret;
 }
 
-
 uint16_t read_mem_dest(uint16_t idx)
 {
   uint16_t ret;
