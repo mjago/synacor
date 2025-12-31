@@ -78,7 +78,7 @@ uint8_t instance = 0;
 
 uint16_t read_mem(uint16_t idx);
 uint16_t read_mem_indirect(uint16_t idx);
-void     print_pc(void);
+void     pc_print(void);
 void     print_stack(void);
 void     write_reg(uint16_t a, uint16_t b);
 uint16_t read_reg(uint16_t a);
@@ -106,8 +106,7 @@ void     retn(void);
 void     out(void);
 void     in(void);
 void     noop(void);
-void     act_upon(uint8_t instr);
-void     pc_process(void);
+void     pc_process(uint8_t instr);
 bool     read_file(void);
 uint8_t  reg_index(uint16_t val);
 void     print_regs(void);
@@ -174,7 +173,7 @@ uint16_t read_mem_indirect(uint16_t idx)
   return ret;
 }
 
-void print_pc(void)
+void pc_print(void)
 {
   if(DEBUG)
     {
@@ -628,100 +627,34 @@ void noop(void)
   vm.pc += 1;
 }
 
-void act_upon(uint8_t instr)
+void pc_process(uint8_t instr)
 {
   switch(instr)
     {
-    case HALT:
-      halt();
-      break;
+    case HALT: halt(); break;
+    case SET:  set();  break;
+    case PUSH: push(); break;
+    case POP:  pop();  break;
+    case EQ:   eq();   break;
+    case GT:   gt();   break;
+    case JMP:  jmp();  break;
+    case JT:   jt();   break;
+    case JF:   jf();   break;
+    case ADD:  add();  break;
+    case MULT: mult(); break;
+    case MOD:  mod();  break;
+    case AND:  and();  break;
+    case OR:   or();   break;
+    case NOT:  not();  break;
+    case RMEM: rmem(); break;
+    case WMEM: wmem(); break;
+    case CALL: call(); break;
+    case RETN: retn(); break;
+    case OUT:  out();  break;
+    case IN:   in();   break;
+    case NOOP: noop(); break;
 
-    case SET:
-      set();
-      break;
-
-    case PUSH:
-      push();
-      break;
-
-    case POP:
-      pop();
-      break;
-
-    case EQ:
-      eq();
-      break;
-
-    case GT:
-      gt();
-      break;
-
-    case JMP:
-      jmp();
-      break;
-
-    case JT:
-      jt();
-      break;
-
-    case JF:
-      jf();
-      break;
-
-    case ADD:
-      add();
-      break;
-
-    case MULT:
-      mult();
-      break;
-
-    case MOD:
-      mod();
-      break;
-
-    case AND:
-      and();
-      break;
-
-    case OR:
-      or();
-      break;
-
-    case NOT:
-      not();
-      break;
-
-    case RMEM:
-      rmem();
-      break;
-
-    case WMEM:
-      wmem();
-      break;
-
-    case CALL:
-      call();
-      break;
-
-    case RETN:
-      retn();
-      break;
-
-    case OUT:
-      out();
-      break;
-
-    case IN:
-      in();
-      break;
-
-    case NOOP:
-      noop();
-      break;
-
-    case HERE:
-      printf("********** HERE\n");
+    case HERE:  printf("********** HERE\n");
       exit(1);
       break;
 
@@ -730,11 +663,6 @@ void act_upon(uint8_t instr)
       exit(1);
       break;
     }
-}
-
-void pc_process(void)
-{
-  act_upon(vm.mem[vm.pc]);
 }
 
 bool read_file(void)
@@ -828,8 +756,8 @@ int main(void)
 
   for(;;)
     {
-      print_pc();
-      pc_process();
+      pc_print();
+      pc_process(vm.mem[vm.pc]);
     }
 
   printf("\n Finish \n");
